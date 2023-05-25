@@ -15,12 +15,28 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app1.views import index_page, exceltoexcel_page, wordtoexcel_page, exceltojson_page
+from rest_framework import routers
+
+from app1.views import *
+from files.views import *
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
+router = routers.SimpleRouter()
+router.register(r'', FileAPIView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", index_page),
-    path("exceltoexcel", exceltoexcel_page),
-    path("wordtoexcel", wordtoexcel_page),
-    path("exceltojson", exceltojson_page),
+    path("excel-to-excel", exceltoexcel_page),
+    path("word-to-excel", wordtoexcel_page),
+    path("excel-to-json", exceltojson_page),
+    path('', index_page), # Маршрутизатор
+    path('api/', MainPageAPIView.as_view(),), # Маршрутизатор
+    path('api2/', ConvertorAPIView.as_view(),),
+    path(r'api3/', include(router.urls)),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
