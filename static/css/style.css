@@ -1,0 +1,38 @@
+body {
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FFFFFF;
+    background-color: #242134;
+    margin: 5%;
+}
+
+.hero{
+    text-align: center;
+}
+
+.choice-btns button{
+    background-color: #2AC4D0;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 33px;
+    width: 178px;
+    height: 56px;
+    margin: 10px;
+}
+
+.info{
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 10%;
+}
+
+#json, #jira{
+    border-radius: 10px;
+    background-color: #2AC4D04F;
+}
+#excel, #md{
+    background-color: #F0F6F6;
+    color: #2AC4D0;
+    border-radius: 10px;
+}

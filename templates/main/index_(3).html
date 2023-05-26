@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Заполнение поля из кнопки</title>
+</head>
+<body>
+ <input type="text" id="myInput">
+ <button onclick="fillField()">Заполнить поле</button>
+
+ <script>
+  function fillField() {
+   var btnText = document.activeElement.innerText;
+   document.getElementById("myInput").value = btnText;
+  }
+ </script>
+</body>
+</html>
