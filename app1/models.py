@@ -2,6 +2,17 @@ from django.db import models
 
 # Create your models here.
 
+
+from django.db import models
+
+class Files(models.Model):
+    title = models.CharField(max_length=255, default='no title')
+    file = models.FileField(upload_to='files')
+
+    def __str__(self):
+        return self.title
+
+
 class MainPageDataFormats(models.Model): # Модель
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -12,6 +23,7 @@ class MainPageDataFormats(models.Model): # Модель
 class MainPageFormats(models.Model):
     source_format = models.TextField()
     result_format = models.TextField()
+    url = models.TextField()
 
 class MainPage(models.Model):
     title = models.CharField(max_length=255)

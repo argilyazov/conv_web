@@ -25,17 +25,18 @@ from django.conf.urls.static import static
 
 router = routers.SimpleRouter()
 router.register(r'', FileAPIView)
-
+views =Views()
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("excel-to-excel", exceltoexcel_page),
+    path("excel-to-excel", views.exceltoexcel_page),
     path("word-to-excel", wordtoexcel_page),
     path("excel-to-json", exceltojson_page),
     path('', index_page), # Маршрутизатор
-    path('api/', MainPageAPIView.as_view(),), # Маршрутизатор
+    path('post-editor', views.post_editor), # Маршрутизатор
     path('api2/', ConvertorAPIView.as_view(),),
     path(r'api3/', include(router.urls)),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
