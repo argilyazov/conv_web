@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 import json
+from pandas.io.excel import ExcelWriter
 import re
 
 
@@ -13,11 +14,20 @@ class Convertor_app:
         self.empty_cells = ''
         self.original = pd.read_excel(excel_path, 'исходный формат')
         self.original = self.original.fillna('')
-        self.between = pd.DataFrame()
-        data = {}  # wtf bro
+        try:
+            self.between = pd.read_excel(excel_path, 'between'
+                                                     '')
+        except:
+            self.between = pd.DataFrame()
         self.result = pd.read_excel(excel_path, 'нужный формат')
         self.corr_fields = self.result.columns
         self.json_format = 'records'
+        #try:
+        #    print(self.result.iloc[[1]])
+        #except:
+        #    print("нет данных")
+
+
 
     def dict_to_dataframe(self, items, df):
         if type(items) is dict:
@@ -63,6 +73,7 @@ class Convertor_app:
             self.between[corr[i]] = corr_columns[i]
         self.fill_result()
         self.fix_date()
+
 
     def rename(self, columns_for_change):
         return columns_for_change
@@ -177,6 +188,17 @@ class Convertor_app:
             return ""
         return str(val)
 
+    def save_valid_excel(self, var):
+        """ Сохраняет xlsx файл с  таблицей result по указанному пути
+            args:
+                var (str): уникальное в бд имя файла
+        """
+        #print(self.result.iloc[[1]])
+        with ExcelWriter(f"{var}") as writer:
+            self.original.to_excel(writer, index=False, sheet_name="исходный формат")
+            self.between.to_excel(writer, index=False, sheet_name="between")
+            self.result.to_excel(writer, index=False, sheet_name="нужный формат")
+
     def to_excel(self, path):
         """ Сохраняет xlsx файл с  таблицей result по указанному пути
             args:
@@ -197,7 +219,6 @@ class Convertor_app:
             ws.column_dimensions[column[0].column_letter].width = length + 2
         wb.save(path)
 
-
     def refill_empty_cells(self):
         empty = ['', ' ', 'None', 'Nan', 'Null']
         for field in self.corr_fields:
@@ -205,10 +226,11 @@ class Convertor_app:
                 if empty.__contains__(self.result.loc[index, field]):
                     self.result.loc[index, field] = self.empty_cells
 
-    def show_json(self, orient,bools):
+    def show_json(self, orient, bools):
         self.json_format = orient
         replace = {'"null"': 'null', '"Null:': 'null', '[': '[\n', ']': ']\n', '{': '{\n', '}': '}\n', ',': ',\n'}
-        replace_bool={'"true"': 'true', '"false"': 'false', '"y"': 'true', '"n"': 'false', '"1"': 'true', '"0"': 'false'}
+        replace_bool = {'"true"': 'true', '"false"': 'false', '"y"': 'true', '"n"': 'false', '"1"': 'true',
+                        '"0"': 'false'}
         res = self.result.to_json(orient=orient, force_ascii=False)
         for key in replace.keys():
             res = res.replace(key, replace[key])
@@ -217,7 +239,7 @@ class Convertor_app:
                 res = res.replace(key, replace_bool[key])
         return res
 
-    def to_json(self, path, orient,bools):
+    def to_json(self, path, orient, bools):
         """ Сохраняет json файл с  таблицей result по указанному пути
             args:
                 path (str): путь сохраняемого файла

@@ -34,8 +34,10 @@
         <div class="container">
             <div class="row">
                 <div class="col">
+
                     <div class="input-table-div">
                         <h2>Загруженная таблица</h2>
+
                         <div style="width: 900px; overflow-x: auto;height: 300px; overflow-y: auto">
 
                             <table class="table table-bordered border-primary">
@@ -70,13 +72,19 @@
                                     function fillSource() {
                                         var btnText = document.activeElement.innerText;
                                         document.getElementById("source").value += btnText;
-                                        document.getElementById("source").value += " ";
+                                        document.getElementById("source").value += ", ";
                                     }
 
                                     function fillResult() {
                                         var btnText = document.activeElement.innerText;
                                         document.getElementById("result").value += btnText;
-                                        document.getElementById("result").value += " ";
+                                        document.getElementById("result").value += ", ";
+                                    }
+
+                                    function clear() {
+                                        var btnText = document.activeElement.innerText;
+                                        document.getElementById("result").value += "1";
+                                        document.getElementById("source").value = "1";
                                     }
                                 </script>
                                 <form action="post-editor" method="POST" enctype="multipart/form-data">
@@ -89,24 +97,24 @@
 
                                     <label for="json-view-empty">Вид пустых ячеек</label>
                                     {{ form_editor.empty_views.as_widget }}
-{#                                    <select id="json-view-empty">#}
-{#                                        <option>null</option>#}
-{#                                        <option>пробел</option>#}
-{#                                    </select>#}
+                                    {#                                    <select id="json-view-empty">#}
+                                    {#                                        <option>null</option>#}
+                                    {#                                        <option>пробел</option>#}
+                                    {#                                    </select>#}
                                     {{ form_editor.command }}
-{#                                    <select multiple class="form-control" id="exampleFormControlSelect2">#}
-{#                                        <option>#}
-{#                                            <button class="btn btn-outline-primary">Переименовать</button>#}
-{#                                        </option>#}
-{#                                        <option>#}
-{#                                            <button class="btn btn-outline-primary">Разъединить</button>#}
-{#                                        </option>#}
-{#                                        <option>#}
-{#                                            <button class="btn btn-outline-primary">Соединить</button>#}
-{#                                        </option>#}
-{##}
-{#                                    </select>#}
-                                    <button type="submit">Применить</button>
+                                    {#                                    <select multiple class="form-control" id="exampleFormControlSelect2">#}
+                                    {#                                        <option>#}
+                                    {#                                            <button class="btn btn-outline-primary">Переименовать</button>#}
+                                    {#                                        </option>#}
+                                    {#                                        <option>#}
+                                    {#                                            <button class="btn btn-outline-primary">Разъединить</button>#}
+                                    {#                                        </option>#}
+                                    {#                                        <option>#}
+                                    {#                                            <button class="btn btn-outline-primary">Соединить</button>#}
+                                    {#                                        </option>#}
+                                    {##}
+                                    {#                                    </select>#}
+                                    <button type="submit" onclick="clear()">Применить</button>
                                 </form>
                             </div>
                         </div>
@@ -152,45 +160,35 @@
 
             <div class="row">
                 <div class="col">
-                    <h2>JSON</h2>
-                    <table class="json-view-table">
-                        <tr>
-                            <td>Элемент</td>
-                            <td>Элемент</td>
-                            <td>Элемент</td>
-                        </tr>
-                        <tr>
-                            <td>Элемент</td>
-                            <td>Элемент</td>
-                            <td>Элемент</td>
-                        </tr>
-                        <tr>
-                            <td>Элемент</td>
-                            <td>Элемент</td>
-                            <td>Элемент</td>
-                        </tr>
-                    </table>
+                    <h2>Excel</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <p>{{ format_view }}</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col">
-                    <div>
-                        <input type="checkbox" id="json-whead">
-                        <label for="json-whead">Первая строка в качестве заголовков </label>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <input type="checkbox" id="json-whead">
+                                <label for="json-whead">Первая строка в качестве заголовков </label>
+                            </div>
+
+                            <div>
+                                <input type="checkbox" id="json-smh">
+                                <label for="json-smh">Первая строка в виде даунов</label>
+                            </div>
+
+                            <label for="json-view">Вид json файла</label>
+                            <select id="json-view">
+                                <option>[]</option>
+                                <option>""</option>
+                            </select>
+                        </div>
                     </div>
-
-                    <div>
-                        <input type="checkbox" id="json-smh">
-                        <label for="json-smh">Первая строка в виде даунов</label>
-                    </div>
-
-                    <label for="json-view">Вид json файла</label>
-                    <select id="json-view">
-                        <option>[]</option>
-                        <option>""</option>
-                    </select>
-
                 </div>
             </div>
-
         </div>
 
         <button>Скачать</button>

@@ -25,22 +25,28 @@ class Views():
             form_editor.save()
 
             command = Editor.objects.last()
-            ex_cmd = (command.command, command.source.split(), command.result.split())
-
+            ex_cmd = (command.command, command.source[:-1].split(', '), command.result[:-1].split(', '))
+            print(ex_cmd)
+            db_file = Files.objects.last().file
+            self.converter = Convertor_app(db_file)
+            self.converter.empty_cells = command.empty_views
+            self.converter.refill_empty_cells()
             self.converter.execute(ex_cmd)
-            # Files.objects.create(converter.to_excel())
+            format_view = self.converter.show_markdown()
+            self.converter.save_valid_excel(str(db_file).replace('files','media/files'))
             return render(request, 'main/excelToExcel.html',
                           {"table_result_header": list(self.converter.result),
                            "table_source_header": list(self.converter.original),
                            "table_source": self.converter.original.values.tolist(),
                            "table_result": self.converter.result.values.tolist(), "form_select": form_select,
-                           "form_editor": form_editor})
+                           "form_editor": form_editor,"format_view":format_view})
 
     def exceltoexcel_page(self,request):
         form_editor = EditorForm
 
         if request.method == 'POST':
             form_select = ResumeForm(request.POST, request.FILES)
+
             if form_select.is_valid():
                 form_select.save()
                 # return HttpResponseRedirect("/")
